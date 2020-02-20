@@ -4,6 +4,10 @@ By: Andrew Chen Wang
 
 If you need a sample data set of users in locations to test your location-based app, this Django sample can help.
 
+## Note: This branch is meant as a backup in case the master branch development goes down the drain.
+
+The current configuration in this branch has PostGIS, Django, and Docker completely ready to be used. Thus, it makes for a great restart point. Simply running `docker-compose up --build` will start Django and PostGIS like nothing happened.
+
 ### Setup
 
 1. Clone or download this repository.
