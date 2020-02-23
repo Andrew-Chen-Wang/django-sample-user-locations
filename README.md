@@ -56,14 +56,6 @@ Freire, Sergio; MacManus, Kytt; Pesaresi, Martino; Doxsey-Whitfield, Erin; Mills
 
 To open the dataset (since most of us have never used it, including me), we need to have a GIS. I'm using QGIS [brought to me from here.](http://www.statsmapsnpix.com/2016/10/the-global-human-settlement-layer.html)
 
-### FAQ
-
-- Exit code 137 simply means you need to increase the amount of memory to run since this copies the entire `.tif.ovr` dataset. You can adjust by executing `docker stats`
-    - I had to use 11 GB (peaking at 10.3 GB)
-    - I recommend you do close any other program. Once the migration is finished, this issue will never pop up again since the data is now in your Postgres db.
-- Memory allocation is a HUGE problem. If you have to re-run the containers to complete the migration (in case of an error like the one above), delete the containers since rasterio will increase the size of the `.tif.ovr` file to 10+ GB (every time you access it).
-    
 ### TODO
 - Admin does not show user location
 - Show all users' locations
-- Memory allocation is exceeding beyond limits
