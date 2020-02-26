@@ -109,6 +109,4 @@ PASSWORD_HASHERS = (
 
 # ----------------------
 # Sample User Build Data
-GIS_DATASET_NAME = "GHS_POP_E2015_GLOBE_R2019A_54009_250_V1_0.tif.ovr"
 NUM_OF_USERS = 1000000  # 1 million
-LIMITED_MEMORY = False

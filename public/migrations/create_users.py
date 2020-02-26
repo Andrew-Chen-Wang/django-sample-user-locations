@@ -8,7 +8,8 @@ def create_superuser(apps, schema_editor):
     User.objects.create_superuser(
         username="test",
         password="test",
-        location=Point(42.3314, -83.0458)
+        # Location of DARPA
+        location=Point(-77.108704, 38.878888)  # West, North | Long, Lat
     )
 
 

@@ -4,22 +4,50 @@ By: Andrew Chen Wang
 
 If you need a sample data set of users in locations to test your location-based app, this Django sample can help.
 
+If you just need a pre-populated database of users with locations based on real-world population density, then follow the below instructions and use Docker to backup the Postgres data.
+
+Table of Contents:
+- Setup
+- Configuration/Settings
+- Running on remote machine then restoring db on work machine
+- What did I do?
+- Credits
+- Citation
+- TODO
+
 ### Setup
 
 1. Clone or download this repository.
-2. Go to https://ghsl.jrc.ec.europa.eu/download.php?ds=pop and download the entire dataset in one file (below the map).
-3. Unzip the file and copy the `.tif.ovr` file into the root directory here.
-    - Help!: The root directory has the Dockerfile.
-4. You must have Docker and docker-compose to execute the following commands to start: `docker-compose up --build`
+2. You must have Docker and docker-compose to execute the following commands to start: `docker-compose up --build`
     - Help!: You must be in the terminal and in the root directory
+3. The following is only if you want to use the Django admin (localhost:8000/admin): In your preferred browser, you will need to Disable Cross-Origin Restrictions (seems like a JS error-doodle).
+    - Reference: https://stackoverflow.com/questions/9310112/why-am-i-seeing-an-origin-is-not-allowed-by-access-control-allow-origin-error
 
 A superuser is automatically created with username `test` and password `test`
 
-### Configuration
+### Configuration/Settings
 
-To use a different GHS-POP dataset, go into the Dockerfile and change the `GHS_POP_E2015_GLOBE_R2019A_54009_250_V1_0.tif.ovr` to your file name. You may have to play around with `public/utils.py`.
+Population density: Go to the `settings.py` and change the variable `NUM_OF_USERS` to decrease the number of users to generate.
 
-Population density: Go to the `settings.py` and change the variable `density` to decrease the number of users to generate.
+### Running on remote machine then restoring db on work machine
+
+My MacBook Air was going to die, so I decided to do this on a Raspberry Pi. Follow these steps (should be similar for Windows; look up PuTTY or Windows SSH to better understand the following steps):
+
+1. Turn on your other machine. In my case, the Pi was to be connected on the same WiFi network. This may not be the case if you're using an EC2 instance (definitely not needed).
+    - Again, make sure Docker and D.Compose is installed. On Pi, you can use this: https://dev.to/zuidwijk/comment/ke9l
+    - If you've just installed Docker, make sure you logout then login or reboot (sudo reboot for pi)
+2. Move this code to your machine. In my case, being in the terminal of my work machine and in the root directory (where this README lives), it was `rsync -a ./ pi@raspberrypi.local:~/my/code/dir` 
+    - Your code will live in dir. This will not create a new directory.
+    - `pi` is the username and `raspberrypi` is the hostname
+3. Run `docker-compose up --build` on the remote machine
+    - I also had to add the `gdal-dev` package in the `Dockerfile` for this to work.
+4. Then run `docker exec -t location_testing_django_postgres pg_dumpall -c -U postgres > ~/dump_location_user_sample.sql`
+    - Here's the size of the SQL dump:
+5. Now to transfer that database back to the local machine. On your WORK machine: `rsync pi@raspberrypi.local:~/dump_location_user_sample.sql ~/dump_location_user_sample.sql`
+    - Delete the .sql file on your remote machine by doing `rm ~/dump_location_user_sample.sql`
+6. On your work machine, run `docker exec -i location_testing_django_postgres psql -U postgres location_django < ~/dump_location_user_sample.sql`
+    - Delete the .sql file since it's now backed up: `rm ~/dump_location_user_sample.sql`
+7. Finally, run the Docker container on your work machine: `docker-compose up`
 
 ### What did I do?
 
@@ -27,11 +55,11 @@ I've simply added a bunch of users to a custom User model. They have funny names
 
 These locations are generated based on population density. They are scattered around within towns, as well, so that they aren't all in one location.
 
-The way I've done this is by using rasterio's colormap, or lack thereof. I actually used the shading from the `.tif.ovr` file from the GHS-POP dataset to calculate density.
+The way I've done this is by using rasterio's colormap, or lack thereof. I actually used the shading from the `.tif` file from the GHS-POP dataset's tiles to calculate density.
 
 ### Credits
 
-All data comes from: https://ghsl.jrc.ec.europa.eu/download.php (uncompressed size is 541.390619 megabytes). 
+All data comes from: https://ghsl.jrc.ec.europa.eu/download.php (uncompressed size is 541.390619 megabytes for one file download). 
 - If you want to double check this number and if you're on Linux or MacOS, clone or download this repository and run `unzip -Zt GHS_BUILT_LDS2014_GLOBE_R2018A_54009_250_V2_0.zip` wherever the ZIP file lives.
 - Their guide: https://ghsl.jrc.ec.europa.eu/documents/GHSL_Data_Package_2019.pdf?t=1478q532234372
 
@@ -43,7 +71,7 @@ Some of the Docker configuration comes from [cookiecutter-django](https://github
 
 ### Citation
 
-I'm using the [GHS-POP](https://ghsl.jrc.ec.europa.eu/data.php?sl=3) dataset:
+I'm using the [GHS-POP](https://ghsl.jrc.ec.europa.eu/data.php?sl=3) dataset (in tiled versions):
 ```
 Dataset:
 
@@ -57,5 +85,4 @@ Freire, Sergio; MacManus, Kytt; Pesaresi, Martino; Doxsey-Whitfield, Erin; Mills
 To open the dataset (since most of us have never used it, including me), we need to have a GIS. I'm using QGIS [brought to me from here.](http://www.statsmapsnpix.com/2016/10/the-global-human-settlement-layer.html)
 
 ### TODO
-- Admin does not show user location
 - Show all users' locations
