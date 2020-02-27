@@ -1,6 +1,6 @@
 import os
 from requests import get
-import zipfile
+from zipfile import ZipFile
 from pathlib import Path
 
 
@@ -607,13 +607,16 @@ def unzip_and_grab_tif(files_names: list) -> dict:
     """
     coordinate_dict = {}
     for file in files_names:
-        with zipfile.ZipFile(Path.cwd() / "dataset_zip" / file, "r") as zip_ref:
+        if os.path.isfile(str(Path.cwd() / "dataset" / file.split(".")[0] + ".tif")):
+            continue
+        with ZipFile(Path.cwd() / "dataset_zip" / file, "r") as zip_ref:
             zip_ref.extract(file.split(".")[0] + ".tif", path=str(Path.cwd() / "dataset"))
             # Get the tile coordinates from the online GHS-POP map
             interval = (file[42:][::-1][4:]).split("_")
-            coordinate_dict[file.split(".")[0] + ".tif"] = (interval[0], interval[1])
-            # Delete the zip file to conserve space
-            # os.remove(Path.cwd() / "dataset_zip" / file)
-    # os.rmdir(path=str(Path.cwd() / "dataset_zip"))
+            coordinate_dict[file.split(".")[0] + ".tif"] = (int(interval[0]), int(interval[1]))
+        # Delete the zip file to conserve space
+        os.remove(Path.cwd() / "dataset_zip" / file)
+    # Delete the directory
+    os.rmdir(path=str(Path.cwd() / "dataset_zip"))
 
     return coordinate_dict

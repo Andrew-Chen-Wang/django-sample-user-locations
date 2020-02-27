@@ -17,6 +17,8 @@ Table of Contents:
 
 ### Setup
 
+I recommend you do this with a remote machine (below this section) instead of doing this on your personal machine. (I used a Raspberry Pi).
+
 1. Clone or download this repository.
 2. You must have Docker and docker-compose to execute the following commands to start: `docker-compose up --build`
     - Help!: You must be in the terminal and in the root directory
@@ -39,8 +41,8 @@ My MacBook Air was going to die, so I decided to do this on a Raspberry Pi. Foll
 2. Move this code to your machine. In my case, being in the terminal of my work machine and in the root directory (where this README lives), it was `rsync -a ./ pi@raspberrypi.local:~/my/code/dir` 
     - Your code will live in dir. This will not create a new directory.
     - `pi` is the username and `raspberrypi` is the hostname
-3. Run `docker-compose up --build` on the remote machine
-    - I also had to add the `gdal-dev` package in the `Dockerfile` for this to work.
+3. Run `docker-compose -f pi-compose.yml up --build` on the remote machine
+    - I ran this detached since this took a long time: `docker-compose -f pi-compose.yml up -d --build && docker container ls -a && docker logs <CONTAINER ID OF location_testing_django>`
 4. Then run `docker exec -t location_testing_django_postgres pg_dumpall -c -U postgres > ~/dump_location_user_sample.sql`
     - Here's the size of the SQL dump:
 5. Now to transfer that database back to the local machine. On your WORK machine: `rsync pi@raspberrypi.local:~/dump_location_user_sample.sql ~/dump_location_user_sample.sql`

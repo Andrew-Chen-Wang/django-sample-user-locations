@@ -132,3 +132,4 @@ def create_users(apps, schema_editor):
 
         # Delete the TIF file to decrease storage
         os.remove(Path.cwd() / "dataset" / tif)
+    os.rmdir(str(Path.cwd() / "dataset"))

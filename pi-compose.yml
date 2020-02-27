@@ -16,7 +16,7 @@ services:
     command: /start
 
   postgres:
-    image: postgis/postgis:10-alpine
+    image: duvel/postgis:10-alpine
     container_name: location_testing_django_postgres
     environment:
       - POSTGRES_DB=location_django

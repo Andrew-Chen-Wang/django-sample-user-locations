@@ -11,7 +11,7 @@ RUN apt-get update \
   # Translations dependencies
   && apt-get install -y gettext \
   # PostGIS dependencies
-  && apt-get install -y binutils libproj-dev gdal-bin \
+  && apt-get install -y binutils libgdal-dev libproj-dev gdal-bin \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*

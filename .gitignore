@@ -1,5 +1,6 @@
 # Dataset
-GHS_POP_E2015_GLOBE_R2019A_54009_250_V1_0.tif.ovr
+dataset/
+dataset_zip/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
