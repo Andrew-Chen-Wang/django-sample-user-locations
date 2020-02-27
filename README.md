@@ -6,7 +6,9 @@ If you need a sample data set of users in locations to test your location-based 
 
 If you just need a pre-populated database of users with locations based on real-world population density, then follow the below instructions and use Docker to backup the Postgres data.
 
-Note: Populating the database takes an extremely long time on my Raspberry Pi while my MacBook Air is most likely dying. Either interval 0,11 has an issue or it's really taking a long time. Either way, I only use this repository to get started with PostGIS now.
+Note: Populating the database takes an extremely long time on my Raspberry Pi while my MacBook Air is most likely dying. Either interval 0,11 has an issue or it's really taking a long time. Either way, I only use this repository to get started with PostGIS now. Based on docker stats, the process does seem like it's working. Since I'm using a remote machine (RPi 3B+), it's taking awhile; however, the memory and CPU usage does fluctuate well enough to prompt me to believe it does work. I'm leaving my Pi to run for awhile and will archive if this does, in fact, not work. ~ 2020-02-27 Andrew C. Wang
+
+Besides that, this is basically a repository with an already setup Docker-compose + Django + PostGIS stack.
 
 Table of Contents:
 - Setup
