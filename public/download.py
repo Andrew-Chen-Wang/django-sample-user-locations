@@ -607,7 +607,7 @@ def unzip_and_grab_tif(files_names: list) -> dict:
     """
     coordinate_dict = {}
     for file in files_names:
-        if os.path.isfile(str(Path.cwd() / "dataset" / file.split(".")[0] + ".tif")):
+        if os.path.isfile(str(Path.cwd() / "dataset" / file.split(".")[0] / ".tif")):
             continue
         with ZipFile(Path.cwd() / "dataset_zip" / file, "r") as zip_ref:
             zip_ref.extract(file.split(".")[0] + ".tif", path=str(Path.cwd() / "dataset"))
